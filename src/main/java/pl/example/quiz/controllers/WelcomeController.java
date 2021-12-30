@@ -10,6 +10,6 @@ public class WelcomeController {
     @GetMapping("/")
     public String welcome(Model model) {
         model.addAttribute("message", "test message");
-        return "home";
+        return "index";
     }
 }
