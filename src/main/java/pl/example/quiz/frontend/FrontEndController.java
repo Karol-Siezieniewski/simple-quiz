@@ -16,6 +16,9 @@ public class FrontEndController {
     @Autowired
     private QuizDataService quizDataService;
 
+    @Autowired
+    private OngoingGameService ongoingGameService;
+
     @GetMapping("/")
     public String welcome(Model model) {
         model.addAttribute("message", "test message");
@@ -32,6 +35,17 @@ public class FrontEndController {
     @PostMapping("/select")
     public String postSelectForm(Model model, @ModelAttribute GameOptions gameOptions){
         log.info("Submitted form containing: " + gameOptions);
-        return "index";
+        ongoingGameService.gameInit(gameOptions);
+        return "redirect:game";
+    }
+
+    @GetMapping("/game")
+    public String game(Model model){
+        model.addAttribute("userAnswer", new UserAnswer());
+        model.addAttribute("currentQuestionNumber", ongoingGameService.getCurrentQuestionIndex());
+        model.addAttribute("totalQuestionNumber", ongoingGameService.getTotalNumberOfQuestions());
+        model.addAttribute("currentQuestion", ongoingGameService.getCurrentQuestion());
+        model.addAttribute("currentQuestionAnswers", ongoingGameService.getCurrentQuestionAnswersInRandom());
+        return "game";
     }
 }
