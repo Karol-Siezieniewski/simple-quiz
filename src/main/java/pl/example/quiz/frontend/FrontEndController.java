@@ -26,26 +26,38 @@ public class FrontEndController {
     }
 
     @GetMapping("/select")
-    public String select(Model model){
+    public String select(Model model) {
         model.addAttribute("gameOptions", new GameOptions());
         model.addAttribute("categories", quizDataService.getQuizCategories());
         return "select";
     }
 
     @PostMapping("/select")
-    public String postSelectForm(Model model, @ModelAttribute GameOptions gameOptions){
+    public String postSelectForm(Model model, @ModelAttribute GameOptions gameOptions) {
         log.info("Submitted form containing: " + gameOptions);
         ongoingGameService.gameInit(gameOptions);
         return "redirect:game";
     }
 
     @GetMapping("/game")
-    public String game(Model model){
+    public String game(Model model) {
         model.addAttribute("userAnswer", new UserAnswer());
         model.addAttribute("currentQuestionNumber", ongoingGameService.getCurrentQuestionIndex());
         model.addAttribute("totalQuestionNumber", ongoingGameService.getTotalNumberOfQuestions());
         model.addAttribute("currentQuestion", ongoingGameService.getCurrentQuestion());
         model.addAttribute("currentQuestionAnswers", ongoingGameService.getCurrentQuestionAnswersInRandom());
         return "game";
+    }
+
+    @PostMapping("/game")
+    public String postSelectForm(Model model, @ModelAttribute UserAnswer userAnswer) {
+        ongoingGameService.checkAnswerForCurrentQuestionAndUpdatePoints(userAnswer.getAnswer());
+        boolean hasNextQuestion = ongoingGameService.proceedToNextQuestion();
+        if(hasNextQuestion) {
+            return "redirect:game";
+        } else {
+            return "redirect:";
+        }
+
     }
 }
