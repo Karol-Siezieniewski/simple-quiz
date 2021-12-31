@@ -60,7 +60,7 @@ public class FrontEndController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/summary")
     public String summary(Model model) {
         model.addAttribute("difficulty", ongoingGameService.getDifficulty());
         model.addAttribute("categoryName", ongoingGameService.getCategoryName());
