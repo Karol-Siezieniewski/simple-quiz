@@ -56,6 +56,15 @@ public class OngoingGameService {
         return answers;
     }
 
+    public boolean checkAnswerForCurrentQuestionAndUpdatePoints(String userAnswer) {
+        QuestionsDto.QuestionDto dto = questions.get(currentQuestionIndex);
+        boolean correct = dto.getCorrectAnswer().equals(userAnswer);
+        if(correct){
+            points++;
+        }
+        return correct;
+    }
+
     public boolean proceedToNextQuestion(){
         currentQuestionIndex++;
         return currentQuestionIndex < questions.size();
