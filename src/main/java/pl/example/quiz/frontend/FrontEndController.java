@@ -53,11 +53,19 @@ public class FrontEndController {
     public String postSelectForm(Model model, @ModelAttribute UserAnswer userAnswer) {
         ongoingGameService.checkAnswerForCurrentQuestionAndUpdatePoints(userAnswer.getAnswer());
         boolean hasNextQuestion = ongoingGameService.proceedToNextQuestion();
-        if(hasNextQuestion) {
+        if (hasNextQuestion) {
             return "redirect:game";
         } else {
-            return "redirect:";
+            return "redirect:summary";
         }
+    }
 
+    @GetMapping
+    public String summary(Model model) {
+        model.addAttribute("difficulty", ongoingGameService.getDifficulty());
+        model.addAttribute("categoryName", ongoingGameService.getCategoryName());
+        model.addAttribute("points", ongoingGameService.getPoints());
+        model.addAttribute("maxPoints", ongoingGameService.getTotalNumberOfQuestions());
+        return "summary";
     }
 }
